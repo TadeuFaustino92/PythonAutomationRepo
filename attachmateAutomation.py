@@ -6,7 +6,7 @@ import csv
 
 path = "C:/Users/Tadeu/Documents/"
 qttFile = "Quantidade_ATU.txt"
-pkgFile = "Pacotes_ATU.txt" #DESTRUIR ARQUIVOS AO FINAL DO SCRIPT
+pkgFile = "Pacotes_ATU.txt"
 newPkgFile = "newPkgFile.txt"
 dateCastFile = "dateCastFile.txt"
 dateFileHMP = "DateFileHMP.txt"
@@ -172,12 +172,12 @@ def storeElement(packageList):
             print(pattern, file=open(path + elemFile, "a"))
             screen.SendKeys('<Pf3><Pf3>')
             time.sleep(0.5)
-    screen.SendKeys('<Pf3>') #Para voltar a tela "CA Endevor SCM Quick Edit 18.1.00"
+    screen.SendKeys('<Pf3>')
     file = open(path + elemFile)
     elementList = file.read().splitlines()
-    getElementDate(elementList)
+    insertElement(elementList)
 
-def getElementDate(elementList):
+def insertElement(elementList):
     for i in elementList:
         screen.SendKeys('<Tab><Tab>')
         write(screen, 12, 18, "HMP")
@@ -210,14 +210,14 @@ def getElementDate(elementList):
                     count += 1 # gets one date if smaller than 2
             screen.SendKeys('<Enter>')
             time.sleep(0.5)
-            getElementData(count)
+            getElementDate(count)
         else:
             print("Deu problema")
             print(0, file=open(path + dateFileHMP, "a"))
             print(0, file=open(path + dateFilePRD, "a"))
             getElementDate()
 
-def getElementData(count):
+def getElementDate(count):
     stage1 = "Stage ID: M"
     stage2 = "Stage ID: P"
     i = 1
@@ -255,7 +255,7 @@ def getElementData(count):
             else:
                 realNum = (num - rows2) / rows2
                 pagination = round(realNum)
-                if pagination - realNum < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
+                if pagination - realNum < 0:
                     pagination += 1
                 i = 1
                 while i <= pagination:
@@ -296,7 +296,7 @@ def getElementData(count):
             else:
                 realNum = (num - rows2) / rows2
                 pagination = round(realNum)
-                if pagination - realNum < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
+                if pagination - realNum < 0:
                     pagination += 1
                 i = 1
                 while i <= pagination:
