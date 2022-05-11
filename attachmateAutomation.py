@@ -5,15 +5,15 @@ import re
 import csv
 
 path = "C:/Users/Tadeu/Documents/"
-qtdFile = "Quantidade_ATU"
-pkgFile = "Pacotes_ATU" #DESTRUIR ARQUIVOS AO FINAL DO SCRIPT
-newPkgFile = "newPkgFile"
-dataCastFile = "dataCastFile"
-dateFileHMP = "DateFileHMP"
-dateFilePRD = "DateFilePRD"
-elemFile = "elemFile"
-planilha = "executePackage.csv"
-planilha2 = "deniePackage.csv"
+qttFile = "Quantidade_ATU.txt"
+pkgFile = "Pacotes_ATU.txt" #DESTRUIR ARQUIVOS AO FINAL DO SCRIPT
+newPkgFile = "newPkgFile.txt"
+dateCastFile = "dateCastFile.txt"
+dateFileHMP = "DateFileHMP.txt"
+dateFilePRD = "DateFilePRD.txt"
+elemFile = "elemFile.txt"
+sheet = "executePackage.csv"
+sheet2 = "deniePackage.csv"
 rows = 15
 rows2 = 9
 margin = 5
@@ -26,12 +26,12 @@ system = win32com.client.Dispatch('EXTRA.System')
 session = system.ActiveSession
 screen = session.Screen
 
-def limpaArquivos():
-    open(path + dataCastFile, 'w').close()
+def cleanFiles():
+    open(path + dateCastFile, 'w').close()
     open(path + elemFile, 'w').close()
     open(path + dateFileHMP, 'w').close()
     open(path + dateFilePRD, 'w').close()
-    open(path + qtdFile, 'w').close()
+    open(path + qttFile, 'w').close()
     open(path + pkgFile, 'w').close()
     open(path + newPkgFile, 'w').close()
 
@@ -40,7 +40,7 @@ def write(screen,row,col,text):
     screen.col = col
     screen.SendKeys(text)
 
-def navegaPacote():
+def navigate():
     write(screen, 17, 38, "xxx")
     screen.SendKeys('<Enter>')
     
@@ -75,24 +75,24 @@ def navegaPacote():
     screen.SendKeys('<Enter>')
     time.sleep(1)
 
-def gravaQuantidadePacote():
+def storeTotalPackage():
     x1, y1, x2, y2 = 1, 1, 1, 80
-    qtd = screen.Area(x1,y1,x2,y2)
-    qtd = str(qtd)
+    qtt = screen.Area(x1,y1,x2,y2)
+    qtt = str(qtt)
     string = "NO PACKAGES SELECTED"
-    if string in qtd:
+    if string in qtt:
         print("Nao ha pacotes para executar")
         exit(0)
     else:
         print("Ha pacotes para executar")
-        numPacote = qtd.split(" of ")[1]
-        numPacote = int(numPacote)
-    gravaNomePacote(numPacote)
+        packageNum = qtt.split(" of ")[1]
+        packageNum = int(packageNum)
+    storePackageName(packageNum)
 
-def gravaNomePacote(num):
+def storePackageName(packageNum):
     x1, y1, x2, y2 = 6, 4, 20, 19
-    if num <= rows:
-        x2 = (num % rows) + margin
+    if packageNum <= rows:
+        x2 = (packageNum % rows) + margin
         pkgs = screen.Area(x1,y1,x2,y2)
         print(pkgs, file=open(path + pkgFile, "w"))
    
@@ -104,18 +104,18 @@ def gravaNomePacote(num):
     else:
         pkgs = screen.Area(x1,y1,x2,y2)
         print(pkgs, file=open(path + pkgFile, "w"))
-        numReal = (num - rows) / rows
-        paginacao = round(numReal)
+        realNum = (packageNum - rows) / rows
+        pagination = round(realNum)
        
-        if paginacao - numReal < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
-            paginacao += 1
+        if pagination - realNum < 0: # if 0, realNum is multiple of rows.
+            pagination += 1
         i = 1
-        while i <= paginacao:
+        while i <= pagination:
             screen.SendKeys('<Pf8>')
             time.sleep(0.25)
-            if i == paginacao:
-                if num % rows != 0:
-                    x2 = (num % rows) + margin
+            if i == pagination:
+                if packageNum % rows != 0:
+                    x2 = (packageNum % rows) + margin
                 pkgs = screen.Area(x1,y1,x2,y2)
                 print(pkgs, file=open(path + pkgFile, "a"))
                 break
@@ -127,15 +127,15 @@ def gravaNomePacote(num):
         with open(path + newPkgFile, 'w') as f:
             f.write(contents.replace('\n\n', '\n'))
     file = open(path + newPkgFile)
-    arrayPacotes = file.read().splitlines()
+    packageList = file.read().splitlines()
     file.close()
     time.sleep(0.5)
     screen.SendKeys('<Pf3>')
     time.sleep(0.5)
-    gravaElemento(arrayPacotes)
+    storeElement(packageList)
 
-def gravaElemento(arrayPacotes):
-    for i in arrayPacotes:
+def storeElement(packageList):
+    for i in packageList:
         write(screen, 2, 15, "1")
         screen.SendKeys('<Tab>')
         screen.SendKeys(i)
@@ -151,10 +151,10 @@ def gravaElemento(arrayPacotes):
             exit(1)
         else:
             x1, y1, x2, y2 = 18, 25, 18, 37
-            dataCast = screen.Area(x1,y1,x2,y2)
-            dataCast = str(dataCast)
-            newTimestampCast = Dicionario(dataCast)
-            print(newTimestampCast, file=open(path + dataCastFile, "a"))
+            castDate = screen.Area(x1,y1,x2,y2)
+            castDate = str(castDate)
+            newTimestampCast = dictionary(castDate)
+            print(newTimestampCast, file=open(path + dateCastFile, "a"))
             write(screen, 22, 15, "s")
             screen.SendKeys('<Enter>')
             time.sleep(0.5)
@@ -174,11 +174,11 @@ def gravaElemento(arrayPacotes):
             time.sleep(0.5)
     screen.SendKeys('<Pf3>') #Para voltar a tela "CA Endevor SCM Quick Edit 18.1.00"
     file = open(path + elemFile)
-    arrayElementos = file.read().splitlines()
-    entraComElemento(arrayElementos)
+    elementList = file.read().splitlines()
+    getElementDate(elementList)
 
-def entraComElemento(arrayElementos):
-    for i in arrayElementos:
+def getElementDate(elementList):
+    for i in elementList:
         screen.SendKeys('<Tab><Tab>')
         write(screen, 12, 18, "HMP")
         screen.SendKeys('<Tab><Tab>')
@@ -201,13 +201,13 @@ def entraComElemento(arrayElementos):
             print("Agora eu estou na tela Element Selection List")
             for x1 in range(1, 22):
                 rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
-                x2 += 1 # para seguir o x1
+                x2 += 1 # follows x1
                 type = "JCLP"
                 stage1 = " M "
                 stage2 = " P "
                 if (type in rc) and (stage1 in rc or stage2 in rc):
                     write(screen, x1, 2, "s")
-                    count += 1 # se tiver menos de 2, pega somente uma data
+                    count += 1 # gets one date if smaller than 2
             screen.SendKeys('<Enter>')
             time.sleep(0.5)
             getElementData(count)
@@ -215,7 +215,7 @@ def entraComElemento(arrayElementos):
             print("Deu problema")
             print(0, file=open(path + dateFileHMP, "a"))
             print(0, file=open(path + dateFilePRD, "a"))
-            entraComElemento()
+            getElementDate()
 
 def getElementData(count):
     stage1 = "Stage ID: M"
@@ -223,16 +223,16 @@ def getElementData(count):
     i = 1
     for i in range(count):
         x1, y1, x2, y2 = 1, 1, 1, 80
-        qtd = screen.Area(x1,y1,x2,y2); qtd = str(qtd)
-        print(qtd, file=open(path + qtdFile, "w"))
-        with open(path + qtdFile, "r") as rfile:
+        qtt = screen.Area(x1,y1,x2,y2); qtt = str(qtt)
+        print(qtt, file=open(path + qttFile, "w"))
+        with open(path + qttFile, "r") as rfile:
             readfile = rfile.read()
             readfile = readfile[-7:]
-            troca = re.sub('[^0-9\n]', '', readfile)
-        with open(path + qtdFile, 'w') as wfile:
-            wfile.write(troca.replace('\n', ''))
-        qtd = open(path + qtdFile, 'r')
-        num = qtd.read()
+            change = re.sub('[^0-9\n]', '', readfile)
+        with open(path + qttFile, 'w') as wfile:
+            wfile.write(change.replace('\n', ''))
+        qtt = open(path + qttFile, 'r')
+        num = qtt.read()
         num = int(num)
 
         x1, y1, x2, y2 = 1, 1, 10, 80
@@ -248,20 +248,20 @@ def getElementData(count):
                 y1, y2 = 31, 43
                 dateHMP = screen.Area(x1,y1,x2,y2)
                 dateHMP = str(dateHMP)
-                newTimestampHMP = Dicionario(dateHMP)
+                newTimestampHMP = dictionary(dateHMP)
                 print(newTimestampHMP, file=open(path + dateFileHMP, "a"))
                 screen.SendKeys('<Pf3>')
                 time.sleep(0.5)
             else:
-                numReal = (num - rows2) / rows2
-                paginacao = round(numReal)
-                if paginacao - numReal < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
-                    paginacao += 1
+                realNum = (num - rows2) / rows2
+                pagination = round(realNum)
+                if pagination - realNum < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
+                    pagination += 1
                 i = 1
-                while i <= paginacao:
+                while i <= pagination:
                     screen.SendKeys('<Pf8>')
                     time.sleep(0.25)
-                    if i == paginacao:
+                    if i == pagination:
                         if num % rows2 == 0:
                             x1 = margin2 + rows2
                         else:
@@ -270,7 +270,7 @@ def getElementData(count):
                         y1, y2 = 31, 43
                         dateHMP = screen.Area(x1,y1,x2,y2)
                         dateHMP = str(dateHMP)
-                        newTimestampHMP = Dicionario(dateHMP)
+                        newTimestampHMP = dictionary(dateHMP)
                         print(newTimestampHMP, file=open(path + dateFileHMP, "a"))
                         break
                     i += 1
@@ -289,20 +289,20 @@ def getElementData(count):
                 y1, y2 = 31, 43
                 datePRD = screen.Area(x1,y1,x2,y2)
                 datePRD = str(datePRD)
-                newTimestampPRD = Dicionario(datePRD)
+                newTimestampPRD = dictionary(datePRD)
                 print(newTimestampPRD, file=open(path + dateFilePRD, "a"))
                 screen.SendKeys('<Pf3>')
                 time.sleep(0.5)
             else:
-                numReal = (num - rows2) / rows2
-                paginacao = round(numReal)
-                if paginacao - numReal < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
-                    paginacao += 1
+                realNum = (num - rows2) / rows2
+                pagination = round(realNum)
+                if pagination - realNum < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
+                    pagination += 1
                 i = 1
-                while i <= paginacao:
+                while i <= pagination:
                     screen.SendKeys('<Pf8>')
                     time.sleep(0.25)
-                    if i == paginacao:
+                    if i == pagination:
                         if num % rows2 == 0:
                             x1 = margin2 + rows2
                         else:
@@ -311,7 +311,7 @@ def getElementData(count):
                         y1, y2 = 31, 43
                         datePRD = screen.Area(x1,y1,x2,y2)
                         datePRD = str(datePRD)
-                        newTimestampPRD = Dicionario(datePRD)
+                        newTimestampPRD = dictionary(datePRD)
                         print(newTimestampPRD, file=open(path + dateFilePRD, "a"))
                         break
                     i += 1
@@ -325,79 +325,78 @@ def getElementData(count):
         i += 1
     screen.SendKeys('<Pf3>')
     time.sleep(0.5)
-    criaPlanilha()
+    createSheet()
 
-def Dicionario(data):
+def dictionary(date):
     dictionary = {"JAN": "01", "FEB": "02", "MAR": "03", "APR": "04", "MAY": "05", "JUN": "06", "JUL": "07", "AUG": "08", "SEP": "09", "OCT": "10", "NOV": "11", "DEC": "12", " ": "", ":": ""}
     for key in dictionary.keys():
-        data = data.replace(key, dictionary[key])
-    dia = data[:2]
-    mes = data[2:4]
-    ano = data[4:6]
-    hora = data[6:8]
-    minu = data[8:10]
-    newTimestamp = ano + mes + dia + hora + minu
+        date = date.replace(key, dictionary[key])
+    dd = date[:2]
+    MM = date[2:4]
+    yy = date[4:6]
+    hh = date[6:8]
+    mm = date[8:10]
+    newTimestamp = yy + MM + dd + hh + mm
     return newTimestamp
 
-def criaPlanilha():
+def createSheet():
     with (open(path + newPkgFile, 'r') as pkg,
-         open(path + dataCastFile, 'r') as cas,
+         open(path + dateCastFile, 'r') as cas,
          open(path + elemFile, 'r') as ele,
          open(path + dateFileHMP, 'r') as dth,
          open(path + dateFilePRD, 'r') as dtp
          ):
-            array1 = pkg.read().splitlines()
-            array2 = cas.read().splitlines(); array2 = [int(numeric_string) for numeric_string in array2]
-            array3 = ele.read().splitlines()
-            array4 = dth.read().splitlines(); array4 = [int(numeric_string) for numeric_string in array4]
-            array5 = dtp.read().splitlines(); array5 = [int(numeric_string) for numeric_string in array5]
+            list1 = pkg.read().splitlines()
+            list2 = cas.read().splitlines(); list2 = [int(numeric_string) for numeric_string in list2]
+            list3 = ele.read().splitlines()
+            list4 = dth.read().splitlines(); list4 = [int(numeric_string) for numeric_string in list4]
+            list5 = dtp.read().splitlines(); list5 = [int(numeric_string) for numeric_string in list5]
     
     matrix = []
-    for i in range(len(array1)):
-        matrix.append([array1[i], array2[i], array3[i], array4[i], array5[i]])
+    for i in range(len(list1)):
+        matrix.append([list1[i], list2[i], list3[i], list4[i], list5[i]])
     
-    #List comprehension
     removeZeroMatrix = [x for x in matrix if 0 not in x]
-    sortedMatrix = sorted(removeZeroMatrix, key=lambda x: x[2], reverse=True) #reverse = True (Sorts in Descending order)
+    sortedMatrix = sorted(removeZeroMatrix, key=lambda x: x[2], reverse=True)
     
     finalMatrix = []
-    valorVerificado = set() # SET é usado para armazenar vários itens em uma única variável
+    verified = set()
     for list in sortedMatrix:
-        elemento = list[2]
-        dataH = list[3]
-        dataP = list[4]
-        if elemento not in valorVerificado and dataH <= dataP:
+        element = list[2]
+        dateH = list[3]
+        dateP = list[4]
+        if element not in verified and dateH <= dateP:
             finalMatrix.append(list)
-            valorVerificado.add(elemento)
-            primDataP = list[4]
-        elif elemento in valorVerificado and dataH <= dataP:
-            seguDataP = list[4]
-            if seguDataP >= primDataP:
+            verified.add(element)
+            firstDateP = list[4]
+        elif element in verified and dateH <= dateP:
+            secondDateP = list[4]
+            if secondDateP >= firstDateP:
                 finalMatrix.pop()
                 finalMatrix.append(list)
     
-    #Cria matrix para tomar denied
+    # Creates a matrix for deny
     deniePackageMatrix = []
     for denie in matrix:
         if denie not in finalMatrix:
             deniePackageMatrix.append(denie)
     
-    #Cria planilhas no Excel
-    colunas = ['Pacote', 'Data Cast', 'Elemento', 'Data HMP', 'Data PRD']
-    with (open(path + planilha, 'w', newline='') as csvFileExec,
-         open(path + planilha2, 'w', newline='') as csvFileDenie
+    # Creates excel spreadsheet
+    columns = ['Pacote', 'Data Cast', 'Elemento', 'Data HMP', 'Data PRD']
+    with (open(path + sheet, 'w', newline='') as csvFileExec,
+         open(path + sheet2, 'w', newline='') as csvFileDenie
          ):
             writer = csv.writer(csvFileExec, delimiter=';')
-            writer.writerow(colunas)
+            writer.writerow(columns)
             for row in finalMatrix:
                 writer.writerow(row)
     
             writer = csv.writer(csvFileDenie, delimiter=';')
-            writer.writerow(colunas)
+            writer.writerow(columns)
             for row in deniePackageMatrix:
                 writer.writerow(row)
 
-limpaArquivos()
-navegaPacote()
-gravaQuantidadePacote()
+cleanFiles()
+navigate()
+storeTotalPackage()
 Ex.terminate()
