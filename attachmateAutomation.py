@@ -215,7 +215,7 @@ def insertElement(elementList):
             print("Deu problema")
             print(0, file=open(path + dateFileHMP, "a"))
             print(0, file=open(path + dateFilePRD, "a"))
-            getElementDate()
+            insertElement(elementList)
 
 def getElementDate(count):
     stage1 = "Stage ID: M"
