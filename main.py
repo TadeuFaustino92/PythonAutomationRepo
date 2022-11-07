@@ -120,14 +120,14 @@ def gravaElemento(arrayPacotes):
         esperaPorString(tela9, lin9, col9)
 
         x1, y1, x2, y2 = 19, 1, 19, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         string = "CAST"
         if string not in rc: 
             print("Erro, linha errada para consulta na tela PACKAGE DISPLAY")
             exit(1)
         else:
             x1, y1, x2, y2 = 19, 25, 19, 37
-            dataCast = screen.Area(x1,y1,x2,y2); dataCast = str(dataCast)
+            dataCast = str(screen.Area(x1,y1,x2,y2))
             newTimestampCast = Dicionario(dataCast)
             print(newTimestampCast, file=open(path + dataCastFile, "a"))
             write(screen, 2, 15, "s")
@@ -135,7 +135,7 @@ def gravaElemento(arrayPacotes):
             esperaPorString(tela10, lin10, col10)
 
         x1, y1, x2, y2 = 5, 1, 5, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         string = "TRANSFER ELEMENT"
         if string not in rc:
             print("Erro, linha errada para consulta na tela DISPLAY - PACKAGE ID: ATUHMPXXXXXXXX")
@@ -169,7 +169,7 @@ def entraComElemento(arrayElementos):
         time.sleep(1) # esperaPorString não funciona aqui por causa do loop: esperaPorString(tela11, lin11, col11)
     
         x1, y1, x2, y2 = 1, 1, 1, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         arrayString = ["Element not Found", "Subsystem not Defined"]
         if any(x in rc for x in arrayString):
             print(f"Deu problema no elemento {i}")
@@ -180,7 +180,7 @@ def entraComElemento(arrayElementos):
             count = 0
             esperaPorString(tela11, lin11, col11)
             for x1 in range(1, 22):
-                rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+                rc = str(screen.Area(x1,y1,x2,y2))
                 x2 += 1 # para seguir o x1
                 type = "JCLP"
                 stage1 = " M "
@@ -198,7 +198,7 @@ def getElementData(count):
     i = 1
     for i in range(count):
         x1, y1, x2, y2 = 1, 1, 1, 80
-        qtd = screen.Area(x1,y1,x2,y2); qtd = str(qtd)
+        qtd = str(screen.Area(x1,y1,x2,y2))
         print(qtd, file=open(path + qtdFile, "w"))
         with open(path + qtdFile, "r") as rfile:
             readfile = rfile.read()
@@ -211,7 +211,7 @@ def getElementData(count):
         num = int(num)
 
         x1, y1, x2, y2 = 1, 1, 10, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         if stage1 in rc:
             if num <= rows2: # CÓDIGO SE REPETE AQUI
                 if num % rows2 == 0:
@@ -220,7 +220,7 @@ def getElementData(count):
                     x1 = (num % rows2) + margin2
                 x2 = x1
                 y1, y2 = 31, 43 # TERMINA NESSE PONTO
-                dateHMP = screen.Area(x1,y1,x2,y2); dateHMP = str(dateHMP)
+                dateHMP = str(screen.Area(x1,y1,x2,y2))
                 newTimestampHMP = Dicionario(dateHMP)
                 print(newTimestampHMP, file=open(path + dateFileHMP, "a"))
                 screen.SendKeys('<Pf3>')
@@ -241,7 +241,7 @@ def getElementData(count):
                             x1 = (num % rows2) + margin2
                         x2 = x1
                         y1, y2 = 31, 43 # TERMINA NESSE PONTO
-                        dateHMP = screen.Area(x1,y1,x2,y2); dateHMP = str(dateHMP)
+                        dateHMP = str(screen.Area(x1,y1,x2,y2))
                         newTimestampHMP = Dicionario(dateHMP)
                         print(newTimestampHMP, file=open(path + dateFileHMP, "a"))
                         break
@@ -258,7 +258,7 @@ def getElementData(count):
                     x1 = (num % rows2) + margin2
                 x2 = x1
                 y1, y2 = 31, 43 # TERMINA NESSE PONTO
-                datePRD = screen.Area(x1,y1,x2,y2); datePRD = str(datePRD)
+                datePRD = str(screen.Area(x1,y1,x2,y2))
                 newTimestampPRD = Dicionario(datePRD)
                 if num == 1:
                     print(newTimestampPRD, file=open(path + dateFilePRD, "a"))
@@ -266,7 +266,7 @@ def getElementData(count):
                     for i in range(num,1,-1):
                         x1 -= 1
                         x2 = x1
-                        newDatePRD = screen.Area(x1,y1,x2,y2); newDatePRD = str(newDatePRD)
+                        newDatePRD = str(screen.Area(x1,y1,x2,y2))
                         secondTimestampPRD = Dicionario(newDatePRD)
                         if secondTimestampPRD[:6] != newTimestampPRD[:6]:
                             print(secondTimestampPRD, file=open(path + dateFilePRD, "a"))
@@ -293,12 +293,12 @@ def getElementData(count):
                             x1 = (num % rows2) + margin2
                         x2 = x1
                         y1, y2 = 31, 43 # TERMINA NESSE PONTO
-                        datePRD = screen.Area(x1,y1,x2,y2); datePRD = str(datePRD)
+                        datePRD = str(screen.Area(x1,y1,x2,y2))
                         newTimestampPRD = Dicionario(datePRD)
                         for i in range(num,1,-1):
                             x1 -= 1
                             x2 = x1
-                            newDatePRD = screen.Area(x1,y1,x2,y2); newDatePRD = str(newDatePRD)
+                            newDatePRD = str(screen.Area(x1,y1,x2,y2))
                             secondTimestampPRD = Dicionario(newDatePRD)
                             if secondTimestampPRD[:6] != newTimestampPRD[:6] and x1 > margin2:
                                 print(secondTimestampPRD, file=open(path + dateFilePRD, "a")) # anterior é diferente, grava
@@ -363,7 +363,7 @@ def aproveAndExec(execPackageMatrix):
         screen.SendKeys('<Enter>')
         esperaPorString(tela9, lin9, col9)
         x1, y1, x2, y2 = 9, 1, 9, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         stringAproved = "EXECUTED"
         stringFailed = "EXEC-FAILED"
         if stringAproved in rc:
@@ -402,7 +402,7 @@ def distPackage():
         time.sleep(3)   # colocado para substituir a tela17
         stringPart = "DRJH1"
         x1, y1, x2, y2 = 12, 1, 12, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         if stringPart in rc and condicao == False:
             esperaPorString(tela17, lin17, col17) # deu ruim aqui, na segunda rodada ele vai pra tela 18, colocar no if
             write(screen, 12, 2, "s")
@@ -429,11 +429,11 @@ def distPackage():
         screen.SendKeys('<Enter>')
         esperaPorString(tela19, lin19, col19)
         x1, y1, x2, y2 = 5, 1, 5, 80
-        rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+        rc = str(screen.Area(x1,y1,x2,y2))
         string = "SUBMITTED"
         if string in rc:
             x1 += 1; x2 = x1
-            rc = screen.Area(x1,y1,x2,y2); rc = str(rc)
+            rc = str(screen.Area(x1,y1,x2,y2))
             stageString = "RC=00"
             if stageString in rc:
                 print(f"Deu certo a distribuição do pacote {package}")
@@ -548,7 +548,7 @@ def Dicionario(data):
 
 def esperaPorString(tela, lin, col):
     #time.sleep(1)
-    var = screen.WaitForString(tela, lin, col, "", "", 60000); var = str(var)
+    var = str(screen.WaitForString(tela, lin, col, "", "", 60000))
     if var == "False":
         print(f"ERRO! Verifique posição correta na tela {tela}, linha {lin}, coluna {col}")
         exit(1)
@@ -562,7 +562,7 @@ def main():
         terminalConector()
         limpaArquivos()
         navegaPacote()
-        gravaNomePacote()
+        gravaQuantidadePacote()
         criaMatriz()
     else:
         stop(proc)
