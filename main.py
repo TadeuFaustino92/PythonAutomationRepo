@@ -87,63 +87,28 @@ def navegaPacote():
     screen.SendKeys('<Enter>')
     time.sleep(1) # Para dar tempo de mostrar se há ou não pacotes REVER
 
-def gravaQuantidadePacote():
-    x1, y1, x2, y2 = 1, 1, 1, 80
-    qtd = str(screen.Area(x1,y1,x2,y2))
-    string = "NO PACKAGES SELECTED"
-    if string in qtd: 
-        print("Nao ha pacotes ATUHMP para executar")
-        exit(0)
-    else: 
-        print("Ha pacotes ATUHMP para executar")
-        numPacote = qtd.split(" of ")[1]
-        numPacote = re.sub("[^\d\.]", "", numPacote)
-        numPacote = int(numPacote)
-    gravaNomePacote(numPacote)
-
-def gravaNomePacote(numPacote):
-    esperaPorString(tela8, lin8, col8)
-    x1, y1, x2, y2 = 7, 4, 22, 19
-    if numPacote == rows:
-        pkgs = screen.Area(x1,y1,x2,y2)
-        print(pkgs, file=open(path + pkgFile, "w"))
-
-    elif numPacote < rows:
-        x2 = (numPacote % rows) + margin
-        pkgs = screen.Area(x1,y1,x2,y2)
-        print(pkgs, file=open(path + pkgFile, "w"))
-    
-    else:
-        pkgs = screen.Area(x1,y1,x2,y2)
-        print(pkgs, file=open(path + pkgFile, "w"))
-        numReal = (numPacote - rows) / rows
-        paginacao = round(numReal)
-        
-        if paginacao - numReal < 0: # SE RESULTADO FOR 0, num É MÚLTIPLO DE rows.
-            paginacao += 1
-        i = 1
-        while i <= paginacao:
+def gravaNomePacote():
+    x1, y1, x2, y2 = 7, 4, 7, 18
+    while True:
+        if x1 > 22:
             screen.SendKeys('<Pf8>')
-            time.sleep(0.25)
-            if i == paginacao:
-                if numPacote % rows != 0:
-                    x2 = (numPacote % rows) + margin
-                pkgs = screen.Area(x1,y1,x2,y2)
-                print(pkgs, file=open(path + pkgFile, "a"))
-                break
-            print(pkgs, file=open(path + pkgFile, "a"))
-            i += 1
-    with open(path + pkgFile, 'r') as f:
-        contents = f.read().replace(' ', '\n')
-        
-    with open(path + newPkgFile, 'w') as f:
-        f.write(contents.replace('\n\n', '\n'))
-        
-    file = open(path + newPkgFile)
-    arrayPacotes = file.read().splitlines()
-    file.close()
-    screen.SendKeys('<Pf3>')
-    esperaPorString(tela7, lin7, col7)
+            time.sleep(3)
+            x1 = 7
+            x2 = x1
+        bottomListString = "---"
+        linha = screen.Area(x1,y1,x2,y2); linha = str(linha)
+        if bottomListString not in linha:
+            print(linha, file=open(path + pkgFile, "a"))
+            x1 += 1
+            x2 = x1
+        else:
+            print("Chegou ao final da lista")
+            screen.SendKeys('<Pf3>')
+            time.sleep(0.5)
+            with open(path + pkgFile, "r") as file:
+                arrayPacotes = file.read().splitlines()
+            print(arrayPacotes)
+            break
     gravaElemento(arrayPacotes)
 
 def gravaElemento(arrayPacotes):
@@ -597,7 +562,7 @@ def main():
         terminalConector()
         limpaArquivos()
         navegaPacote()
-        gravaQuantidadePacote()
+        gravaNomePacote()
         criaMatriz()
     else:
         stop(proc)
