@@ -562,7 +562,7 @@ def main():
         terminalConector()
         limpaArquivos()
         navegaPacote()
-        gravaQuantidadePacote()
+        gravaNomePacote()
         criaMatriz()
     else:
         stop(proc)
