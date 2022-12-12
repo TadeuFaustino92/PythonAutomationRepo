@@ -123,7 +123,7 @@ def gravaElemento(arrayPacotes):
         rc = str(screen.Area(x1,y1,x2,y2))
         string = "CAST"
         if string not in rc: 
-            print("Erro, linha errada para consulta na tela PACKAGE DISPLAY")
+            print("Erro, linha errada para consulta na tela XPTO")
             exit(1)
         else:
             x1, y1, x2, y2 = 19, 25, 19, 37
@@ -138,7 +138,7 @@ def gravaElemento(arrayPacotes):
         rc = str(screen.Area(x1,y1,x2,y2))
         string = "TRANSFER ELEMENT"
         if string not in rc:
-            print("Erro, linha errada para consulta na tela DISPLAY - PACKAGE ID: ATUHMPXXXXXXXX")
+            print("Erro, linha errada para consulta na tela 1234")
             exit(1)
         else:
             pattern = rc[20:].replace("'", "")
@@ -155,7 +155,7 @@ def gravaElemento(arrayPacotes):
 def entraComElemento(arrayElementos):
     for i in arrayElementos:
         screen.SendKeys('<Tab><Tab>')
-        write(screen, 12, 18, "CEFHMP")
+        write(screen, 12, 18, "PATTERN")
         screen.SendKeys('<Tab><Tab>')
         write(screen, 13, 18, "PRD")
         screen.SendKeys('<Tab>')
@@ -166,7 +166,7 @@ def entraComElemento(arrayElementos):
         screen.SendKeys('<Delete>')
         write(screen, 15, 18, i)
         screen.SendKeys('<Enter>')
-        time.sleep(1) # esperaPorString não funciona aqui por causa do loop: esperaPorString(tela11, lin11, col11)
+        time.sleep(1)
     
         x1, y1, x2, y2 = 1, 1, 1, 80
         rc = str(screen.Area(x1,y1,x2,y2))
@@ -182,7 +182,7 @@ def entraComElemento(arrayElementos):
             for x1 in range(1, 22):
                 rc = str(screen.Area(x1,y1,x2,y2))
                 x2 += 1 # para seguir o x1
-                type = "JCLP"
+                type = "JCOL"
                 stage1 = " M "
                 stage2 = " P "
                 if (type in rc) and (stage1 in rc or stage2 in rc):
@@ -213,20 +213,20 @@ def getElementData(count):
         x1, y1, x2, y2 = 1, 1, 10, 80
         rc = str(screen.Area(x1,y1,x2,y2))
         if stage1 in rc:
-            if num <= rows2: # CÓDIGO SE REPETE AQUI
+            if num <= rows2:
                 if num % rows2 == 0:
                     x1 = margin2 + rows2
                 else:
                     x1 = (num % rows2) + margin2
                 x2 = x1
-                y1, y2 = 31, 43 # TERMINA NESSE PONTO
+                y1, y2 = 31, 43
                 dateHMP = str(screen.Area(x1,y1,x2,y2))
                 newTimestampHMP = Dicionario(dateHMP)
                 print(newTimestampHMP, file=open(path + dateFileHMP, "a"))
                 screen.SendKeys('<Pf3>')
                 esperaPorString(stagePRD, linStagePRD, colStagePRD)
             else:
-                numReal = (num - rows2) / rows2 # CÓDIGO SE REPETE AQUI
+                numReal = (num - rows2) / rows2
                 paginacao = round(numReal)
                 if paginacao - numReal < 0:
                     paginacao += 1
@@ -278,7 +278,7 @@ def getElementData(count):
                 screen.SendKeys('<Pf3>')
                 esperaPorString(tela11, lin11, col11)
             else:
-                numReal = (num - rows2) / rows2 # CÓDIGO SE REPETE AQUI
+                numReal = (num - rows2) / rows2
                 paginacao = round(numReal)
                 if paginacao - numReal < 0:
                     paginacao += 1
@@ -292,7 +292,7 @@ def getElementData(count):
                         else:
                             x1 = (num % rows2) + margin2
                         x2 = x1
-                        y1, y2 = 31, 43 # TERMINA NESSE PONTO
+                        y1, y2 = 31, 43
                         datePRD = str(screen.Area(x1,y1,x2,y2))
                         newTimestampPRD = Dicionario(datePRD)
                         for i in range(num,1,-1):
@@ -301,13 +301,13 @@ def getElementData(count):
                             newDatePRD = str(screen.Area(x1,y1,x2,y2))
                             secondTimestampPRD = Dicionario(newDatePRD)
                             if secondTimestampPRD[:6] != newTimestampPRD[:6] and x1 > margin2:
-                                print(secondTimestampPRD, file=open(path + dateFilePRD, "a")) # anterior é diferente, grava
+                                print(secondTimestampPRD, file=open(path + dateFilePRD, "a"))
                                 break
-                            elif (secondTimestampPRD[:6] == newTimestampPRD[:6] and x1 == margin2) or x1 == (margin2 - 1): # rever
+                            elif (secondTimestampPRD[:6] == newTimestampPRD[:6] and x1 == margin2):
                                 time.sleep(0.5)
                                 screen.SendKeys('<Pf7>')
                                 time.sleep(0.5)
-                                x1 = 23 # colocar esse valor como variável, pode mudar
+                                x1 = 23
                                 continue
                             else:
                                 continue
@@ -337,7 +337,7 @@ def aproveAndExec(execPackageMatrix):
         screen.SendKeys('<Enter>')
         esperaPorString(tela13, lin13, col13)
         write(screen, 2, 16, "a")
-        screen.SendKeys('<Enter>') # após esse Enter, esperar pela tela7, colocar também a string APPROVAL PERFORMED?
+        screen.SendKeys('<Enter>')
         esperaPorString(tela7, lin7, col7)
         write(screen, 2, 15, "5")
         screen.SendKeys('<Enter>')
@@ -345,13 +345,13 @@ def aproveAndExec(execPackageMatrix):
         write(screen, 2, 16, "s")
         screen.SendKeys('<Enter>')
         esperaPorString(tela15, lin15, col15)
-        write(screen, 14, 7, "//END@" + package[-4:] + " JOB (END,END,9999,9999),'REROPRJ',")
-        write(screen, 15, 7, "// CLASS=K,MSGCLASS=G,TIME=1440")
-        write(screen, 16, 7, "/*JOBPARM L=999999,C=999999")
+        write(screen, 14, 7, "//END@" + package[-4:] + " JOB (END,END,9999,9999),'ORGPRJ',")
+        write(screen, 15, 7, "// CLASS=S,MSGCLASS=W,TIME=8888")
+        write(screen, 16, 7, "/*PARM Q=999999,P=999999")
         write(screen, 2, 14, "s")
-        screen.SendKeys('<Enter><Enter>') # volta pra tela "Package Foreground Options Menu"
+        screen.SendKeys('<Enter><Enter>')
         esperaPorString(tela7, lin7, col7)
-        time.sleep(3)   # colocar espera pelas strings 1, n, y, y?
+        time.sleep(3)
         write(screen, 20, 22, "n")
         esperaPorString(insert1, linInsert1, colInsert1)
         write(screen, 20, 45, "y")
@@ -383,7 +383,7 @@ def aproveAndExec(execPackageMatrix):
     distPackage()
 
 def distPackage():
-    global array6, array7, arrayDist # arrayDist não precisa ser global
+    global array6, array7, arrayDist
     array6, array7 = [], []
     with open(path + execucao, 'r') as Exec:
         array6 = Exec.read().splitlines()
@@ -404,12 +404,12 @@ def distPackage():
         x1, y1, x2, y2 = 12, 1, 12, 80
         rc = str(screen.Area(x1,y1,x2,y2))
         if stringPart in rc and condicao == False:
-            esperaPorString(tela17, lin17, col17) # deu ruim aqui, na segunda rodada ele vai pra tela 18, colocar no if
+            esperaPorString(tela17, lin17, col17)
             write(screen, 12, 2, "s")
             screen.SendKeys('<Enter>')
-            esperaPorString(tela18, lin18, col18)   # colocar uma condição caso dê erro na linha de pesquisa
+            esperaPorString(tela18, lin18, col18)
         elif stringPart not in rc:
-            print(f"A string {stringPart} está em outra posição")
+            print(f"A string {stringPart}
             exit(1)
         write(screen, 2, 15, "sh")
         screen.SendKeys('<Enter>')
@@ -419,9 +419,9 @@ def distPackage():
             condicao = True
         esperaPorString(tela16, lin16, col16)
         write(screen, 2, 15, "3")
-        write(screen, 18, 8, "//ENDS" + package[-4:] + " JOB (END,END,9999,9999),'REROPRJ',")
-        write(screen, 19, 8, "// CLASS=Q,MSGCLASS=G,TIME=1440")
-        write(screen, 20, 8, "/*JOBPARM L=999999,C=999999")
+        write(screen, 18, 8, "//ENDS" + package[-4:] + " JOB (END,END,9999,8888),'ORGPRJ',")
+        write(screen, 19, 8, "// CLASS=Z,MSGCLASS=G,TIME=8888")
+        write(screen, 20, 8, "/*PARM K=999999,Y=999999")
         screen.SendKeys('<Enter>')
         esperaPorString(shipmentMsg, linShipmentMsg, colShipmentMsg)
         time.sleep(3) # tirar depois que acertar na função esperaporstring
@@ -483,22 +483,22 @@ def criaMatriz():
         dataH = list[3]
         dataP = list[4]
         dataC = list[1]
-        if elemento not in valorVerificado and ((dataH == dataP and dataP != 0) or (dataH == 0 and dataP != 0)):
-            execPackageMatrix.append(list)
-            primDataC = dataC
-        elif elemento in valorVerificado and ((dataC >= primDataC and dataH == dataP and dataP != 0) or (dataH == 0 and dataP != 0)):
+        if elemento not in valorVerificado:
+            if (dataH == dataP and dataP != 0) or (dataH == 0 and dataP != 0):
+                execPackageMatrix.append(list)
+                primDataC = dataC
+            else (dataH == 0 and dataP == 0) or (dataH != dataP):
+                primDataC = dataC
+                separaPackageMatrix.append(list)
+        if dataC >= primDataC and dataH == dataP and dataP != 0:
             deniePackageMatrix.append(execPackageMatrix.pop())
             execPackageMatrix.append(list)
-        elif elemento in valorVerificado and dataH == dataP and dataP != 0 and dataC < primDataC:
-            deniePackageMatrix.append(list)
-        elif elemento not in valorVerificado and ((dataH == 0 and dataP == 0) or (dataH != dataP)):
-            primDataC = dataC # verificar essa lógica
-            separaPackageMatrix.append(list)
-        elif elemento in valorVerificado and ((dataH == 0 and dataP == 0) or (dataH != dataP)):
-            deniePackageMatrix.append(list)
+            if dataH == dataP and dataP != 0 and dataC < primDataC:
+                deniePackageMatrix.append(list)
+            else(dataH == 0 and dataP == 0) or (dataH != dataP):
+                deniePackageMatrix.append(list)
         valorVerificado.add(elemento)
 
-    #Junto com distPackage, gerará 2 arrays globais para compor a matriz final
     aproveAndExec(execPackageMatrix)
     lastMatrix = []
     for i in range(len(array1)):
