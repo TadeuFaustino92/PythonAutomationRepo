@@ -22,7 +22,7 @@ margin = 6 # 5
 margin2 = 12 # 11
 
 def start():
-    return subprocess.Popen("C:\\Program Files (x86)\\Attachmate\\E!E2K\\Sessions\\RedeCaixa2.edp", shell=True)
+    return subprocess.Popen("C:\\Program Files (x86)\\Attachmate\\E!E2K\\Rede2.edp", shell=True)
 
 def stop(proc):
     proc.terminate()
