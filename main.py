@@ -6,7 +6,7 @@ import subprocess
 from MyWindow3 import user, password, partition
 from variaveis import *
 
-path = "C:\\Users\\p514731\\OneDrive - Caixa Economica Federal\\Documentos\\Procedimentos\\Python\\Arquivos\\"
+path = "C:\\"
 qtdFile = "Quantidade_ATU.txt"
 pkgFile = "Pacotes_ATU.txt"
 newPkgFile = "newPkgFile.txt"
